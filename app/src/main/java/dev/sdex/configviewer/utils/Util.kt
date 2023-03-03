@@ -1,6 +1,11 @@
 package dev.sdex.configviewer.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
 import android.util.Xml
+import android.widget.Toast
 import com.topjohnwu.superuser.nio.FileSystemManager
 import dev.sdex.configviewer.model.SettingsFile
 import org.xmlpull.v1.XmlPullParser
@@ -26,4 +31,12 @@ fun getSettingsFile(
         }
     }
     return byteArrayOutputStream.toString()
+}
+
+fun copyText(context: Context, value: String) {
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    clipboard.primaryClip = ClipData.newPlainText("text", value)
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+    }
 }

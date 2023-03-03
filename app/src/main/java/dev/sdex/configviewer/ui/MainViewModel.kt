@@ -5,8 +5,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Xml
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ipc.RootService
 import com.topjohnwu.superuser.nio.FileSystemManager
@@ -15,6 +16,7 @@ import dev.sdex.configviewer.model.Setting
 import dev.sdex.configviewer.model.Settings
 import dev.sdex.configviewer.model.SettingsFile
 import dev.sdex.configviewer.utils.FileSystemService
+import dev.sdex.configviewer.utils.PreferencesManager
 import dev.sdex.configviewer.utils.getSettingsFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -23,7 +25,9 @@ import org.xmlpull.v1.XmlPullParser
 import timber.log.Timber
 import java.io.StringReader
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val preferencesManager: PreferencesManager,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AppUiState(isLoading = true))
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
@@ -55,7 +59,11 @@ class MainViewModel : ViewModel() {
             override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
                 Timber.d("onServiceConnected: $componentName")
                 this@MainViewModel.fileSystemManager = FileSystemManager.getRemote(service)
-                load(SettingsFile.CONFIG) /* TODO read from preferences */
+                val currentFile = preferencesManager.read(
+                    PreferencesManager.CURRENT_FILE,
+                    SettingsFile.CONFIG.name
+                )
+                load(SettingsFile.valueOf(currentFile))
             }
 
             override fun onServiceDisconnected(name: ComponentName) {
@@ -74,12 +82,13 @@ class MainViewModel : ViewModel() {
                 val remoteFS = fileSystemManager!!
                 val file = getSettingsFile(remoteFS, settingsFile)
                 val settings = parse(file)
-                /* TODO write to preferences */
+                preferencesManager.write(PreferencesManager.CURRENT_FILE, settingsFile.name)
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
                         items = settings,
-                        currentSettingsFile = settingsFile.file,
+                        currentSettingsFile = settingsFile,
+                        title = settingsFile.file,
                     )
                 }
             } catch (e: Exception) {
@@ -118,6 +127,22 @@ class MainViewModel : ViewModel() {
             currentState.copy(
                 currentSetting = setting,
             )
+        }
+    }
+
+    companion object {
+
+        @Suppress("UNCHECKED_CAST")
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras
+            ): T {
+                val application = extras[APPLICATION_KEY] as ConfigViewerApp
+                val preferencesManager = PreferencesManager(application)
+                return MainViewModel(preferencesManager) as T
+            }
         }
     }
 }

@@ -4,14 +4,12 @@ import android.app.Application
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import timber.log.Timber
 
-class ConfigViewerApp: Application() {
+class ConfigViewerApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
-        //if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        //}
+        Timber.plant(Timber.DebugTree())
         HiddenApiBypass.addHiddenApiExemptions("")
     }
 
