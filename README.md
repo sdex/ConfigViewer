@@ -7,6 +7,8 @@ Supported files:
 - `settings_secure.xml`
 - `settings_system.xml`
 
+# Download
+[ConfigViewer-1.0.apk](https://github.com/sdex/ConfigViewer/releases/download/1.0/ConfigViewer-1.0.apk)
 
 | ![Screenshot_20230310_102838.png](screenshots/Screenshot_20230310_102838.png)  | ![Screenshot_20230310_102857.png](screenshots/Screenshot_20230310_102857.png)   |
 |---|---|
