@@ -7,5 +7,5 @@ Supported files:
 - `settings_secure.xml`
 - `settings_system.xml`
 
-| ![Screenshot_20230310_102838.png](screenshots/Screenshot_20230310_102838.png) | ![Screenshot_20230310_102857.png](screenshots/Screenshot_20230310_102857.png) | ![Screenshot_20230310_102906.png](screenshots/Screenshot_20230310_102906.png) |  | ![Screenshot_20230310_102919.png](screenshots/Screenshot_20230310_102919.png) 
-|-------------------------------------------------------------------------------|---|---|---|
+| ![Screenshot_20230310_102838.png](screenshots/Screenshot_20230310_102838.png) | ![Screenshot_20230310_102857.png](screenshots/Screenshot_20230310_102857.png) | ![Screenshot_20230310_102906.png](screenshots/Screenshot_20230310_102906.png) | ![Screenshot_20230310_102919.png](screenshots/Screenshot_20230310_102919.png) |
+|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
