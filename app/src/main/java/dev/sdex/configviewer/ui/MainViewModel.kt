@@ -79,6 +79,9 @@ class MainViewModel(
     fun load(settingsFile: SettingsFile) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (fileSystemManager == null) {
+                    return@launch
+                }
                 val remoteFS = fileSystemManager!!
                 val file = getSettingsFile(remoteFS, settingsFile)
                 val settings = parse(file)
